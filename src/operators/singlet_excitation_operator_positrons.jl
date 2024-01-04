@@ -5,7 +5,7 @@ export EP, ep
 
 The basic EP_pq type operator.
 """
-struct SingletExcitationOperatorPositronsPositrons <: Operator
+struct SingletExcitationOperatorPositrons <: Operator
     p::Int
     q::Int
 end

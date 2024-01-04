@@ -12,7 +12,7 @@ end
 
 function Base.show(io::IO,
     (
-        e, constraints, translation
+        ep, constraints, translation
     )::Tuple{SingletExcitationOperator,Constraints,IndexTranslation})
     print(io, "EP_")
     print_mo_index(io, constraints, translation, e.p, e.q)
@@ -38,14 +38,14 @@ function Base.isless(a::SingletExcitationOperator, b::SingletExcitationOperator)
 end
 
 """
-    P(p, q)
+    EP(p, q)
 
 Constructs an expression containing a single excitation operator.
 """
 EP(p, q) = Expression(SingletExcitationOperator(p, q))
 
 """
-    EP(p, q, r, s) = EP(p, q) * EP(r, s) - δ(r, q) * EP(p, s)
+    ep(p, q, r, s) = EP(p, q) * EP(r, s) - δ(r, q) * EP(p, s)
 
 Alias for the two electron singlet excitation operator. 
 ```

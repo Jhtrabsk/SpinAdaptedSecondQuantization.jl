@@ -46,7 +46,7 @@ function reductive_commutator(
     r = b.p
     s = b.q
 
-    (1, δ(q, r) * E(p, s) - δ(p, s) * E(r, q))
+    (1, δ(q, r) * EP(p, s) - δ(p, s) * EP(r, q))
 end
 
 function reductive_commutator(a::FermionOperator, b::FermionOperator)

@@ -12,7 +12,7 @@ end
 
 function Base.show(io::IO,
     (
-        ep, constraints, translation
+        e, constraints, translation
     )::Tuple{SingletExcitationOperatorPositrons,Constraints,IndexTranslation})
     print(io, "EP_")
     print_mo_index(io, constraints, translation, e.p, e.q)

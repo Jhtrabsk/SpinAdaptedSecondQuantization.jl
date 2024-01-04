@@ -15,26 +15,26 @@ function Base.show(io::IO,
         ep, constraints, translation
     )::Tuple{SingletExcitationOperator,Constraints,IndexTranslation})
     print(io, "EP_")
-    print_mo_index(io, constraints, translation, e.p, e.q)
+    print_mo_index(io, constraints, translation, ep.p, ep.q)
 end
 
 function exchange_indices(e::SingletExcitationOperator, mapping)
     SingletExcitationOperator(
-        exchange_index(e.p, mapping),
-        exchange_index(e.q, mapping)
+        exchange_index(ep.p, mapping),
+        exchange_index(ep.q, mapping)
     )
 end
 
 function get_all_indices(e::SingletExcitationOperator)
-    (e.p, e.q)
+    (ep.p, ep.q)
 end
 
 function Base.:(==)(a::SingletExcitationOperator, b::SingletExcitationOperator)
-    (a.p, a.q) == (b.p, b.q)
+    (ap.p, a.q) == (bp.p, bp.q)
 end
 
 function Base.isless(a::SingletExcitationOperator, b::SingletExcitationOperator)
-    (a.p, a.q) < (b.p, b.q)
+    (ap.p, ap.q) < (bp.p, bp.q)
 end
 
 """
@@ -50,16 +50,16 @@ EP(p, q) = Expression(SingletExcitationOperator(p, q))
 Alias for the two electron singlet excitation operator. 
 ```
 """
-ep(p, q, r, s) = P(p, q) * P(r, s) - δ(r, q) * P(p, s)
+ep(p, q, r, s) = EP(p, q) * EP(r, s) - δ(r, q) * EP(p, s)
 
 function convert_to_elementary_operators(o::SingletExcitationOperator)
     Expression(
-        [(fermiondag(o.p, spin)*fermion(o.q, spin))[1] for spin in (α, β)]
+        [(fermiondag(op.p, spin)*fermion(op.q, spin))[1] for spin in (α, β)]
     )
 end
 
 function act_on_ket(op::SingletExcitationOperator)
-    p = op.p
+    EP = op.p
     q = op.q
     EP(p, q) * virtual(p) * occupied(q) +
     2 * δ(p, q) * occupied(p, q)

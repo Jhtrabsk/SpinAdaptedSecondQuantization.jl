@@ -18,22 +18,22 @@ function Base.show(io::IO,
     print_mo_index(io, constraints, translation, ep.p, ep.q)
 end
 
-function exchange_indices(e::SingletExcitationOperator, mapping)
+function exchange_indices(ep::SingletExcitationOperator, mapping)
     SingletExcitationOperator(
         exchange_index(ep.p, mapping),
         exchange_index(ep.q, mapping)
     )
 end
 
-function get_all_indices(e::SingletExcitationOperator)
+function get_all_indices(ep::SingletExcitationOperator)
     (ep.p, ep.q)
 end
 
-function Base.:(==)(a::SingletExcitationOperator, b::SingletExcitationOperator)
+function Base.:(==)(ap::SingletExcitationOperator, bp::SingletExcitationOperator)
     (ap.p, a.q) == (bp.p, bp.q)
 end
 
-function Base.isless(a::SingletExcitationOperator, b::SingletExcitationOperator)
+function Base.isless(ap::SingletExcitationOperator, bp::SingletExcitationOperator)
     (ap.p, ap.q) < (bp.p, bp.q)
 end
 
@@ -52,7 +52,7 @@ Alias for the two electron singlet excitation operator.
 """
 ep(p, q, r, s) = EP(p, q) * EP(r, s) - δ(r, q) * EP(p, s)
 
-function convert_to_elementary_operators(o::SingletExcitationOperator)
+function convert_to_elementary_operators(op::SingletExcitationOperator)
     Expression(
         [(fermiondag(op.p, spin)*fermion(op.q, spin))[1] for spin in (α, β)]
     )

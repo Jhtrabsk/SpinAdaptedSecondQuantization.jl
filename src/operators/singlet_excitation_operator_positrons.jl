@@ -30,7 +30,7 @@ function get_all_indices(ep::SingletExcitationOperator)
 end
 
 function Base.:(==)(ap::SingletExcitationOperator, bp::SingletExcitationOperator)
-    (ap.p, a.q) == (bp.p, bp.q)
+    (ap.p, ap.q) == (bp.p, bp.q)
 end
 
 function Base.isless(ap::SingletExcitationOperator, bp::SingletExcitationOperator)

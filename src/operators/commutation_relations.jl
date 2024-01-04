@@ -51,7 +51,7 @@ function reductive_commutator(::SingletExcitationOperator, ::BosonOperator)
     return (1, zero(Expression{Int64}))
 end
 
-function reductive_commutator(E::SingletExcitationOperator, EP::SingletExcitationOperator)
+function reductive_commutator(::SingletExcitationOperatorPositrons, ::SingletExcitationOperator)
     return (1, zero(Expression{Int64}))
 end
 

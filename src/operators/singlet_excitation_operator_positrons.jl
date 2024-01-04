@@ -1,4 +1,4 @@
-export E, e
+export EP, ep
 
 """
     SingletExcitationOperator Positrons

@@ -1,4 +1,4 @@
-export GeneralOrbital, OccupiedOrbital, VirtualOrbital, ElectronicOrbital
+export GeneralOrbital, OccupiedOrbital, VirtualOrbital, PositronOrbital
 export general, isoccupied, isvirtual
 
 # Note: perhaps redefine this as Union{OccupiedOrbital,VirtualOrbital}

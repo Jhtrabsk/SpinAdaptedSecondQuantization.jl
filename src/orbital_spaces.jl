@@ -10,19 +10,21 @@ Any orbital subspace is a subtype of this type.
 """
 abstract type GeneralOrbital end
 
+abstract type ElectronicOrbital end
+
 """
     OccupiedOrbital
 
 Type representing all occupied orbitals.
 """
-abstract type OccupiedOrbital <: GeneralOrbital end
+abstract type OccupiedOrbital <: ElectronicOrbital end
 
 """
     VirtualOrbital
 
 Type representing all virtual orbitals.
 """
-abstract type VirtualOrbital <: GeneralOrbital end
+abstract type VirtualOrbital <: ElectronicOrbital end
 
 # Defining relations to sort indices
 

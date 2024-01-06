@@ -152,7 +152,7 @@ function getname_positron(io::IO, constraints::Constraints,
         print(io, Base.text_colors[get(colors, constraints(i), :nothing)])
     end
 
-    getname(io, translation(i)...)
+    getnames_positron(io, translation(i)...)
 
     if do_color
         print(io, "\x1b[39m")

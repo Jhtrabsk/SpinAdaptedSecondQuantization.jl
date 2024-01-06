@@ -50,7 +50,16 @@ function is_strict_subspace(::Type{S1}, ::Type{S2}) where
     S1 != S2 && S1 <: S2
 end
 
+function is_strict_subspace(::Type{S1}, ::Type{S2}) where
+    {S1<:PositronOrbital,S2<:PositronOrbital}
+        S1 != S2 && S1 <: S2
+    end
+
 function getnames(::Type{S}) where {S<:GeneralOrbital}
+    throw("getnames not implemented for space $S")
+end
+
+function getnames(::Type{S}) where {S<:PositronOrbital}
     throw("getnames not implemented for space $S")
 end
 

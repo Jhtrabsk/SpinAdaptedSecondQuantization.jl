@@ -50,7 +50,7 @@ function is_strict_subspace(::Type{S1}, ::Type{S2}) where
     S1 != S2 && S1 <: S2
 end
 
-function is_strict_subspace(::Type{S1}, ::Type{S2}) where
+function is_strict_subspace_positron(::Type{S1}, ::Type{S2}) where
     {S1<:PositronOrbital,S2<:PositronOrbital}
         S1 != S2 && S1 <: S2
     end
@@ -59,7 +59,7 @@ function getnames(::Type{S}) where {S<:GeneralOrbital}
     throw("getnames not implemented for space $S")
 end
 
-function getnames(::Type{S}) where {S<:PositronOrbital}
+function getnames_positron(::Type{S}) where {S<:PositronOrbital}
     throw("getnames not implemented for space $S")
 end
 
@@ -129,6 +129,23 @@ function getname(io::IO, constraints::Constraints,
     translation::IndexTranslation, i::Int)
     do_color = index_color &&
                (is_strict_subspace(constraints(i), translation(i)[1]) ||
+                color_translated)
+
+    if do_color
+        print(io, Base.text_colors[get(colors, constraints(i), :nothing)])
+    end
+
+    getname(io, translation(i)...)
+
+    if do_color
+        print(io, "\x1b[39m")
+    end
+end
+
+function getname_positron(io::IO, constraints::Constraints,
+    translation::IndexTranslation, i::Int)
+    do_color = index_color &&
+               (is_strict_subspace_positron(constraints(i), translation(i)[1]) ||
                 color_translated)
 
     if do_color

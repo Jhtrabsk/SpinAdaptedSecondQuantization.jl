@@ -88,7 +88,7 @@ function subscript(i)
     String(take!(io))
 end
 
-default_color(::Type{GeneralOrbital}) = :nothing
+default_color(::Type{GeneralOrbital}) = :red
 default_color(::Type{OccupiedOrbital}) = :light_green
 default_color(::Type{VirtualOrbital}) = :cyan
 

@@ -11,6 +11,9 @@ Any orbital subspace is a subtype of this type.
 abstract type GeneralOrbital end
 
 abstract type PositronOrbital end
+
+PositronOrbital => GeneralOrbital 
+
 """
     OccupiedOrbital
 

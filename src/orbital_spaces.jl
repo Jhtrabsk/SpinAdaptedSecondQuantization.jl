@@ -12,8 +12,6 @@ abstract type GeneralOrbital end
 
 abstract type PositronOrbital end
 
-PositronOrbital => GeneralOrbital 
-
 """
     OccupiedOrbital
 

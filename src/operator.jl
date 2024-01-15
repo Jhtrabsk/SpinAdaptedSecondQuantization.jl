@@ -11,7 +11,6 @@ include("operators/singlet_excitation_operator.jl")
 include("operators/triplet_excitation_operator.jl")
 include("operators/fermion_operator.jl")
 include("operators/boson_operator.jl")
-
 include("operators/sorting.jl")
 include("operators/commutation_relations.jl")
 

@@ -89,7 +89,7 @@ function subscript(i)
     String(take!(io))
 end
 
-default_color(::Type{GeneralOrbital}) = :red
+default_color(::Type{GeneralOrbital}) = :nothing
 default_color(::Type{OccupiedOrbital}) = :light_green
 default_color(::Type{VirtualOrbital}) = :cyan
 
@@ -147,23 +147,6 @@ function getname(io::IO, constraints::Constraints,
         print(io, "\x1b[39m")
     end
 end
-
-#function getname_positron(io::IO, constraints::Constraints,
-#    translation::IndexTranslation, i::Int)
-#    do_color = index_color &&
-#               (is_strict_subspace_positron(constraints(i), translation(i)[1]) ||
-#                color_translated)
-#
-#    if do_color
-#        print(io, Base.text_colors[get(colors, constraints(i), :nothing)])
-#    end
-
-#    getnames_positron(io, translation(i)...)
-
-#    if do_color
-#        print(io, "\x1b[39m")
-#    end
-#end
 
 function print_mo_index(io::IO, constraints::Constraints,
     translation::IndexTranslation, p)

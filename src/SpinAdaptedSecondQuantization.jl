@@ -26,7 +26,7 @@ include("wick_theorem.jl")
 
 include("print_code.jl")
 
-include("code_generation.jl")
+include("code_generator.jl")
 
 include("tensor_replacements.jl")
 

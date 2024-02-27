@@ -1,4 +1,4 @@
 
-include("code_generators/old.jl")
-include("code_generators/julia.jl")
-include("code_generators/eT_code.jl")
+include("code_generation/old.jl")
+include("code_generation/julia.jl")
+include("code_generation/eT_code.jl")

@@ -566,22 +566,174 @@ function print_code_einsum_withextract_general(t::Term, symbol::String, translat
         # t term, a tensor
         write_str = " extract_mat($(get_symbol(a)), \""
         for b in get_indices(a)
+            if t.constraints[b] ∉ [VirtualOrbital, OccupiedOrbital]
+                throw("Space not supported")
+            end
 
             if b ∈ t.sum_indices || sprint(SASQ.print_mo_index, t.constraints, translation, b)[1] in external
-                if t.constraints[b] in [OccupiedOrbital, OccupiedOrbitalPositron]
-                   write_str *= "o"
+                write_str *= t.constraints[b] == VirtualOrbital ? "v" : "o"
+            else
+                write_str *= t.constraints[b] == VirtualOrbital ? "a" : "i"
+            end
 
-                elseif t.constraints[b] in [VirtualOrbital]
-                    write_str *= "v"
+        end
+        return write_str * "\", o, v)"
+    end
+
+    fix_b = false
+    fix_c = false
+    fix_j = false
+    fix_k = false
+    if length(t.deltas) > 0
+        for d in t.deltas
+            delta_ind = sprint(SASQ.print_mo_index, t.constraints, translation, d.indices...)
+            if 'b' in delta_ind
+                fix_b = true
+            end
+            if 'c' in delta_ind
+                fix_c = true
+            end
+            if 'j' in delta_ind
+                fix_j = true
+            end
+            if 'k' in delta_ind
+                fix_k = true
+            end
+        end
+    end
+
+    external_int = get_external_indices(t)
+    external = sprint(SASQ.print_mo_index, t.constraints, translation, external_int...)
+
+    # Remove a and i  from external
+    fixed = ['a','i']
+    external = join([a for a in external if a ∉ fixed])
+
+    # Determining actual externals, after the deltas
+    new_ext = ""
+    if length(external) >= 2
+        new_ext *= fix_b ? "" : "b"
+        new_ext *= fix_j ? "" : "j"
+    end
+    if length(external) == 4
+        new_ext *= fix_c ? "" : "c"
+        new_ext *= fix_k ? "" : "k"
+    end
+
+    temp_color = index_color
+    disable_color()
+
+    # Make einsum_str and find not-summed tensors
+    einsum_str = "\""
+    notsum_str = ""
+    not_summed_tensors = []
+    print_einsum = false
+    for a in t.tensors
+        # if (No indices) or (nothing summed  and 0 external)                  
+        if length(get_indices(a)) == 0 || (length(t.sum_indices) == 0 && sum([1 for b in get_indices(a) if sprint(SASQ.print_mo_index, t.constraints, translation, b)[1] in new_ext]) == 0)
+            push!(not_summed_tensors, a)
+        else
+            indices = []
+            for b in get_indices(a)
+                if b ∈ t.sum_indices || sprint(SASQ.print_mo_index, t.constraints, translation, b)[1] in new_ext
+                    push!(indices, sprint(SASQ.print_mo_index, t.constraints, translation, b))
+                end
+            end
+            if join(indices) == new_ext
+                push!(not_summed_tensors, a)
+                new_ext = ""
+            elseif join(indices) == ""
+                    push!(not_summed_tensors, a)
+            else
+                einsum_str *= join(indices)
+                einsum_str *= ","
+                print_einsum = true
+            end
+        end
+    end
+
+    if print_einsum
+        einsum_str = einsum_str[begin:end-1] * "->" * new_ext * "\""
+    end
+
+    if (temp_color)
+        enable_color()
+    end
+
+    # Make tensor_str
+    tensor_str = ""
+    for a in t.tensors 
+        if a ∉ not_summed_tensors
+            tensor_str *= ","
+            tensor_str *= write_extract(t, a, external, translation)
+        end
+    end
+
+    # Make string for not-summed tensors
+    for a in not_summed_tensors
+        if length(get_indices(a)) > 0
+            notsum_str *= " *"
+            notsum_str *= write_extract(t, a, external, translation)
+        else
+            notsum_str *= " * $(get_symbol(a))"
+        end
+    end
+
+    # Printing depending on sum or not
+    pre_string = "$(symbol)_$(external)"
+
+    if length(external) >= 2   
+    pre_string *= fix_b ? "[a" : "[:"
+    pre_string *= fix_j ? ",i" : ",:"
+    end
+    if length(external) == 4
+        pre_string *= fix_c ? ",a" : ",:"
+        pre_string *= fix_k ? ",i" : ",:"
+    end
+    if length(external) >= 2
+        pre_string *= "]"
+    end
+
+    if length(external) == 0
+        pre_string = "$(symbol)"
+    end
+
+    if length(tensor_str) > 0
+        return "$pre_string = $pre_string .+ $scalar_str $notsum_str * np.einsum($einsum_str$tensor_str, optimize=\"optimal\");"
+    else
+        return "$pre_string += $scalar_str $notsum_str;"
+    end
+
+end
+
+function print_code_einsum_withextract_positron(t::Term, symbol::String, translation)
+    # Print python np.einsum code
+    scalar_str = @sprintf "%+12.8f" t.scalar
+    translation = update_index_translation(t, translation)
+
+    function write_extract(t, a, external, translation)
+        # t term, a tensor
+        write_str = " extract_mat($(get_symbol(a)), \""
+        for b in get_indices(a)
+            if t.constraints[b] ∉ [VirtualOrbital, OccupiedOrbital]
+                throw("Space not supported")
+            end
+
+            if b ∈ t.sum_indices || sprint(SASQ.print_mo_index, t.constraints, translation, b)[1] in external
+               
+                if t.constraints[b] == VirtualOrbital
+                write_str *= "v"
+
+                elseif t.constraints[b] == OccupiedOrbital
+                write_str *= "o"
+
+                elseif t.constraints[b] == OccupiedOrbitalPositron
+                    write_str *= "o"
 
                 else 
                     write_str *= "v"
-                
-                end
-# write else and do soemthing 
 
-            else
-                write_str *= t.constraints[b] == VirtualOrbital ? "a" : "i"
+                end 
 
             end
 
@@ -615,7 +767,7 @@ function print_code_einsum_withextract_general(t::Term, symbol::String, translat
     external = sprint(SASQ.print_mo_index, t.constraints, translation, external_int...)
 
     # Remove a and i  from external
-    fixed = []
+    fixed = ['a','i']
     external = join([a for a in external if a ∉ fixed])
 
     # Determining actual externals, after the deltas

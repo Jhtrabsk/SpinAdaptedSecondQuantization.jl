@@ -715,9 +715,6 @@ function print_code_einsum_withextract_positron(t::Term, symbol::String, transla
         # t term, a tensor
         write_str = " extract_mat($(get_symbol(a)), \""
         for b in get_indices(a)
-            if t.constraints[b] ∉ [VirtualOrbital, OccupiedOrbital]
-                throw("Space not supported")
-            end
 
             if b ∈ t.sum_indices || sprint(SASQ.print_mo_index, t.constraints, translation, b)[1] in external
                

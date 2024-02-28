@@ -609,7 +609,7 @@ function print_code_einsum_withextract_general(t::Term, symbol::String, translat
     external = sprint(SASQ.print_mo_index, t.constraints, translation, external_int...)
 
     # Remove a and i  from external
-    fixed = ['a','i']
+    fixed = []
     external = join([a for a in external if a ∉ fixed])
 
     # Determining actual externals, after the deltas

@@ -568,15 +568,15 @@ function print_code_einsum_withextract_general(t::Term, symbol::String, translat
         for b in get_indices(a)
 
             if b ∈ t.sum_indices || sprint(SASQ.print_mo_index, t.constraints, translation, b)[1] in external
-                if t.constraints[b] in [VirtualOrbital, VirtualOrbitalP]
+                if t.constraints[b] in [VirtualOrbital, VirtualOrbitalPositron]
                    write_str *= "v"
-                elseif t.constraints[b] in [OccupiedOrbital, OccupiedOrbitalP]
+                elseif t.constraints[b] in [OccupiedOrbital, OccupiedOrbitalPositron]
                    write_str *= "o"
                 end 
 
             else
                 write_str *= t.constraints[b] == VirtualOrbital ? "a" : "i"
-                
+
             end
 
         end

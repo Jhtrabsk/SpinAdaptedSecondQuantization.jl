@@ -571,9 +571,14 @@ function print_code_einsum_withextract_general(t::Term, symbol::String, translat
                 if t.constraints[b] in [OccupiedOrbital, OccupiedOrbitalPositron]
                    write_str *= "o"
 
-                elseif t.constraints[b] in [VirtualOrbital, VirtualOrbitalPositron]
+                elseif t.constraints[b] in [VirtualOrbital]
                     write_str *= "v"
-                end 
+
+                else 
+                    write_str *= "v"
+                
+                end
+# write else and do soemthing 
 
             else
                 write_str *= t.constraints[b] == VirtualOrbital ? "a" : "i"

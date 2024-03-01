@@ -14,7 +14,7 @@ function Base.show(io::IO,
     (
         e_p, constraints, translation
     )::Tuple{SingletExcitationOperatorP,Constraints,IndexTranslation})
-    print(io, "E_")
+    print(io, "E_p_")
     print_mo_index(io, constraints, translation, e_p.p, e_p.q)
 end
 

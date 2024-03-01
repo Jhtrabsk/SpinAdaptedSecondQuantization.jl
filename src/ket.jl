@@ -17,12 +17,12 @@ function act_on_ket(ex::Expression{T}, max_ops=Inf) where {T}
     Expression(all_terms)
 end
 
-function act_on_ket_positron(ex::Expression{T}, max_ops=Inf) where {T}
+function act_on_ket_positrons(ex::Expression{T}, max_ops=Inf) where {T}
     nth = Threads.nthreads()
     terms = [Term{T}[] for _ in 1:nth]
     Threads.@threads for id in 1:nth
         for i in id:nth:length(ex.terms)
-            append!(terms[id], act_on_ket_positron(ex[i], max_ops).terms)
+            append!(terms[id], act_on_ket_positrons(ex[i], max_ops).terms)
         end
     end
 
@@ -84,8 +84,8 @@ function act_on_ket_positrons(t::Term{A}, max_ops) where {A<:Number}
 
     right_op = pop!(copyt.operators)
     print(right_op)
-    right_op_act = act_on_ket_positron(right_op)
-    copyt_act = act_on_ket_positron(copyt,
+    right_op_act = act_on_ket_positrons(right_op)
+    copyt_act = act_on_ket_positrons(copyt,
         max_ops - minimum(length(t1.operators) for t1 in right_op_act.terms))
 
     terms = Term{A}[]

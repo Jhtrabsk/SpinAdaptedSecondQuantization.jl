@@ -25,7 +25,7 @@ function exchange_indices(e_p::SingletExcitationOperatorP, mapping)
     )
 end
 
-function get_all_indices(e::SingletExcitationOperatorP)
+function get_all_indices(e_p::SingletExcitationOperatorP)
     (e_p.p, e_p.q)
 end
 

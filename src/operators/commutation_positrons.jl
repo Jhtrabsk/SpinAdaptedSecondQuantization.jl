@@ -47,7 +47,7 @@ function reductive_commutator(a::PositronOperator, b::PositronOperator)
     end
 end
 
-function reductive_commutator(::SingletExcitationOperator, ::PositronOperator)
+function reductive_commutator(::SingletExcitationOperatorP, ::PositronOperator)
     return (1, zero(Expression{Int64}))
 end
 
@@ -55,12 +55,12 @@ function reductive_commutator(::FermionOperator, ::PositronOperator)
     return (1, zero(Expression{Int64}))
 end
 
-function reductive_commutator(::TripletExcitationOperator, ::PositronOperator)
+function reductive_commutator(::TripletExcitationOperatorP, ::PositronOperator)
     return (1, zero(Expression{Int64}))
 end
 
-function reductive_commutator(t::TripletPositronExcitationOperator,
-    e::SingletPositronExcitationOperator)
+function reductive_commutator(t::TripletPositronExcitationOperatorP,
+    e::SingletPositronExcitationOperatorP)
 
     p = t.p
     q = t.q

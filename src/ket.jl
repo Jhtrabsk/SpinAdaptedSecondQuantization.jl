@@ -48,7 +48,6 @@ function act_on_ket(t::Term{A}, max_ops) where {A<:Number}
 
     right_op = pop!(copyt.operators)
     right_op_act = act_on_ket(right_op)
-    print(right_op)
     copyt_act = act_on_ket(copyt,
         max_ops - minimum(length(t1.operators) for t1 in right_op_act.terms))
 
@@ -83,7 +82,6 @@ function act_on_ket_positrons(t::Term{A}, max_ops) where {A<:Number}
     copyt = SASQ.Term(t.scalar, t.sum_indices, t.deltas, t.tensors, elec_op, t.constraints, t.max_simplified, true)
 
     right_op = pop!(copyt.operators)
-    print(right_op)
     right_op_act = act_on_ket_positrons(right_op)
     copyt_act = act_on_ket_positrons(copyt,
         max_ops - minimum(length(t1.operators) for t1 in right_op_act.terms))

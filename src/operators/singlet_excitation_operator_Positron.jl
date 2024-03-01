@@ -1,4 +1,4 @@
-export E, e
+export E_p, e_p
 
 """
     SingletExcitationOperator
@@ -12,21 +12,21 @@ end
 
 function Base.show(io::IO,
     (
-        e, constraints, translation
+        e_p, constraints, translation
     )::Tuple{SingletExcitationOperatorP,Constraints,IndexTranslation})
     print(io, "E_")
-    print_mo_index(io, constraints, translation, e.p, e.q)
+    print_mo_index(io, constraints, translation, e_p.p, e_p.q)
 end
 
-function exchange_indices(e::SingletExcitationOperatorP, mapping)
+function exchange_indices(e_p::SingletExcitationOperatorP, mapping)
     SingletExcitationOperatorP(
-        exchange_index(e.p, mapping),
-        exchange_index(e.q, mapping)
+        exchange_index(e_p.p, mapping),
+        exchange_index(e_p.q, mapping)
     )
 end
 
 function get_all_indices(e::SingletExcitationOperatorP)
-    (e.p, e.q)
+    (e_p.p, e_p.q)
 end
 
 function Base.:(==)(a::SingletExcitationOperatorP, b::SingletExcitationOperatorP)
@@ -42,7 +42,7 @@ end
 
 Constructs an expression containing a single excitation operator.
 """
-E(p, q) = Expression(SingletExcitationOperatorP(p, q))
+E_p(p, q) = Expression(SingletExcitationOperatorP(p, q))
 
 """
     e(p, q, r, s) = E(p, q) * E(r, s) - δ(r, q) * E(p, s)
@@ -50,7 +50,7 @@ E(p, q) = Expression(SingletExcitationOperatorP(p, q))
 Alias for the two electron singlet excitation operator.
 ```
 """
-e(p, q, r, s) = E(p, q) * E(r, s) - δ(r, q) * E(p, s)
+e_p(p, q, r, s) = E_p(p, q) * E_p(r, s) - δ(r, q) * E_p(p, s)
 
 function convert_to_elementary_operators(o::SingletExcitationOperatorP)
     Expression(
@@ -61,7 +61,7 @@ end
 function act_on_ket(op::SingletExcitationOperatorP)
     p = op.p
     q = op.q
-    E(p, q) * virtual(p) * occupied(q) +
+    E_p(p, q) * virtual(p) * occupied(q) +
     2 * δ(p, q) * occupied(p, q)
 end
 

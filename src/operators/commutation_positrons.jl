@@ -10,8 +10,8 @@
 # i.e. implement only [a, b]± and not also [b, a]±
 
 function reductive_commutator(
-    a::SingletPositronsExcitationOperator,
-    b::SingletPositronsExcitationOperator
+    a::SingletExcitationOperatorP,
+    b::SingletExcitationOperatorP
 )
     p = a.p
     q = a.q
@@ -25,7 +25,7 @@ function reductive_commutator(a::Positron, b::Positron)
     (-1, δ(a.p, b.p) * (a.spin == b.spin) * (a.dag != b.dag))
 end
 
-function reductive_commutator(e::SingletPositronsExcitationOperator, a::Positron)
+function reductive_commutator(e::SingletExcitationOperatorP, a::Positron)
     p = e.p
     q = e.q
     r = a.p

@@ -74,7 +74,7 @@ function act_on_ket_positrons(t::Term{A}, max_ops) where {A<:Number}
     if iszero(t.scalar)
         return Expression(zero(A))
     end
-    if isempty([op for op in t.operators if typeof(op) == SASQ.SingletExcitationOperator])
+    if isempty([op for op in t.operators if typeof(op) == SASQ.SingletExcitationOperatorP])
         return Expression([t])
     end
 
@@ -101,7 +101,7 @@ function act_on_ket_positrons(t::Term{A}, max_ops) where {A<:Number}
                            if length(ter.operators) <= new_max)
         end
 
-        append!(terms, act_on_ket(comm, max_ops).terms)
+        append!(terms, act_on_ket_positrons(comm, max_ops).terms)
     end
     terms = [SASQ.Term(t1.scalar, t1.sum_indices, t1.deltas, t1.tensors, [pos_op; t1.operators], t1.constraints, t1.max_simplified, true) for t1 in terms]
     Expression(terms)

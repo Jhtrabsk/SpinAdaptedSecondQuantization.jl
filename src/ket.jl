@@ -56,7 +56,7 @@ function act_on_ket(t::Term{A}, max_ops) where {A<:Number}
     for r in right_op_act.terms
         Γ, comm = reductive_commutator_fuse(copyt, r)
 
-        ele_operators = sum([1 for op in r.operators if type(op) == SASQ.SingletExcitationOperator])
+        ele_operators = sum([1 for op in r.operators if typeof(op) == SASQ.SingletExcitationOperator])
         if ele_operators <= max_ops
             new_max = max_ops - length(r.operators)
             append!(terms, Γ * fuse(r, ter)
@@ -92,7 +92,7 @@ function act_on_ket_positrons(t::Term{A}, max_ops) where {A<:Number}
     for r in right_op_act.terms
         Γ, comm = reductive_commutator_fuse(copyt, r)
 
-        ele_operators = sum([1 for op in r.operators if type(op) == SASQ.SingletExcitationOperator])
+        ele_operators = sum([1 for op in r.operators if typeof(op) == SASQ.SingletExcitationOperator])
 
         if ele_operators <= max_ops
             new_max = max_ops - length(r.operators)

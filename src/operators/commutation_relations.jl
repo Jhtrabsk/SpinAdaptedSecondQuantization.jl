@@ -47,6 +47,9 @@ function reductive_commutator(a::BosonOperator, b::BosonOperator)
     end
 end
 
+function reductive_commutator(::SingletExcitationOperator, ::SingletExcitationOperatorP)
+    return (1, zero(Expression{Int64})) 
+
 function reductive_commutator(::SingletExcitationOperator, ::BosonOperator)
     return (1, zero(Expression{Int64}))
 end

@@ -58,7 +58,7 @@ function convert_to_elementary_operators(o::SingletExcitationOperatorP)
     )
 end
 
-function act_on_ket(op::SingletExcitationOperatorP)
+function act_on_ket_positron(op::SingletExcitationOperatorP)
     p = op.p
     q = op.q
     E_p(p, q) * virtual(p) * occupied(q) +

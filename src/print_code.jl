@@ -708,6 +708,8 @@ end
 
 function print_code_einsum_withextract_positron(t::Term, symbol::String, translation)
     # Print python np.einsum code
+    # New function to handle positrons
+    # 
     scalar_str = @sprintf "%+12.8f" t.scalar
     translation = update_index_translation(t, translation)
 
@@ -719,16 +721,16 @@ function print_code_einsum_withextract_positron(t::Term, symbol::String, transla
             if b ∈ t.sum_indices || sprint(SASQ.print_mo_index, t.constraints, translation, b)[1] in external
                
                 if t.constraints[b] == VirtualOrbital
-                write_str *= "v"
+                   write_str *= "v" 
 
                 elseif t.constraints[b] == OccupiedOrbital
-                write_str *= "o"
+                   write_str *= "o"
 
                 elseif t.constraints[b] == OccupiedOrbitalPositron
-                    write_str *= "o"
+                   write_str *= "o"
 
                 else 
-                    write_str *= "v"
+                   write_str *= "v"
 
                 end 
 

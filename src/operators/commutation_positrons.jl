@@ -18,17 +18,17 @@ function reductive_commutator(
     r = b.p
     s = b.q
 
-    (1, δ(q, r) * E(p, s) - δ(p, s) * E(r, q))
+    (1, δ(q, r) * E_p(p, s) - δ(p, s) * E_p(r, q))
 end
 
 function reductive_commutator(a::FermionOperator, b::FermionOperator)
     (-1, δ(a.p, b.p) * (a.spin == b.spin) * (a.dag != b.dag))
 end
 
-function reductive_commutator(e::SingletExcitationOperatorP, a::FermionOperator)
-    p = e.p
-    q = e.q
-    r = a.p
+function reductive_commutator(e_p::SingletExcitationOperatorP, a::FermionOperator)
+    p = e_p.p
+    q = e_p.q
+    r = a_p.p
 
     (1, if a.dag
         δ(q, r) * fermiondag(p, a.spin)
@@ -60,13 +60,13 @@ function reductive_commutator(::TripletExcitationOperator, ::BosonOperator)
 end
 
 function reductive_commutator(t::TripletExcitationOperator,
-    e::SingletExcitationOperatorP)
+    e_p::SingletExcitationOperatorP)
 
     p = t.p
     q = t.q
 
-    r = e.p
-    s = e.q
+    r = e_p.p
+    s = e_p.q
 
     (1, δ(r, q) * τ(p, s) - δ(p, s) * τ(r, q))
 end
@@ -83,9 +83,9 @@ function reductive_commutator(t1::TripletExcitationOperator,
     (1, δ(r, q) * E(p, s) - δ(p, s) * E(r, q))
 end
 
-function reductive_commutator(e::TripletExcitationOperator, a::FermionOperator)
-    p = e.p
-    q = e.q
+function reductive_commutator(e_p::TripletExcitationOperator, a::FermionOperator)
+    p = e_p.p
+    q = e_p.q
     r = a.p
 
     (1, if a.dag

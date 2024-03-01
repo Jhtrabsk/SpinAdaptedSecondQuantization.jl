@@ -13,6 +13,8 @@ include("operators/fermion_operator.jl")
 include("operators/boson_operator.jl")
 include("operators/sorting.jl")
 include("operators/commutation_relations.jl")
+include("operator/commutation_positrons.jl")
+include("operator/singlet_excitation_operator_Positron")
 
 # Required methods for all Operators to overload:
 

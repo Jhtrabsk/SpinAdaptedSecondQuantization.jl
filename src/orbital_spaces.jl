@@ -1,4 +1,4 @@
-export GeneralOrbital, OccupiedOrbital, VirtualOrbital
+export GeneralOrbital, OccupiedOrbital, VirtualOrbital, PositronOrbital
 export general, isoccupied, isvirtual
 
 # Note: perhaps redefine this as Union{OccupiedOrbital,VirtualOrbital}
@@ -9,6 +9,8 @@ Top level supertype of all orbital spaces.
 Any orbital subspace is a subtype of this type.
 """
 abstract type GeneralOrbital end
+
+abstract type PositronOrbital end
 
 """
     OccupiedOrbital
@@ -23,10 +25,10 @@ abstract type OccupiedOrbital <: GeneralOrbital end
 Type representing all virtual orbitals.
 """
 abstract type VirtualOrbital <: GeneralOrbital end
-
+#
 # Defining relations to sort indices
-
 # A space is not less than itself
+#
 Base.isless(::Type{S}, ::Type{S}) where {S<:GeneralOrbital} = false
 Base.isless(::Type{S1}, ::Type{S2}) where
 {S1<:GeneralOrbital,S2<:GeneralOrbital} = !(S2 < S1)
@@ -34,8 +36,8 @@ Base.isless(::Type{S1}, ::Type{S2}) where
 # A subspace of a space is considered "greater" than the parent space
 # making it come later when sorting
 Base.isless(::Type{S1}, ::Type{S2}) where {S2<:GeneralOrbital,S1<:S2} = false
-# Base.isless(::Type{S1}, ::Type{S2}) where {S1<:GeneralOrbital,S2<:S1} = true
 
+# Base.isless(::Type{S1}, ::Type{S2}) where {S1<:GeneralOrbital,S2<:S1} = true
 # Defining occupied orbitals to come before virtuals.
 # This is up for debate
 Base.isless(::Type{OccupiedOrbital}, ::Type{OccupiedOrbital}) = false
@@ -49,7 +51,21 @@ function is_strict_subspace(::Type{S1}, ::Type{S2}) where
     S1 != S2 && S1 <: S2
 end
 
+function is_strict_subspace(::Type{S1}, ::Type{S2}) where
+    {S1<:PositronOrbital,S2<:GeneralOrbital}
+        S1 != S2 && S1 <: S2
+    end
+
+function is_strict_subspace_positron(::Type{S1}, ::Type{S2}) where
+    {S1<:PositronOrbital,S2<:PositronOrbital}
+        S1 != S2 && S1 <: S2
+    end
+
 function getnames(::Type{S}) where {S<:GeneralOrbital}
+    throw("getnames not implemented for space $S")
+end
+
+function getnames_positron(::Type{S}) where {S<:PositronOrbital}
     throw("getnames not implemented for space $S")
 end
 

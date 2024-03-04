@@ -29,3 +29,15 @@ end
 function Base.isless(::Type{BosonOperator}, ::Type{TripletExcitationOperator})
     false
 end
+
+function Base.isless(::Type{SingletExcitationOperator}, ::Type{SingletExcitationOperatorP})
+    false
+end
+
+function Base.isless(::Type{FermionOperator}, ::Type{SingletExcitationOperatorP})
+    false
+end
+
+function Base.isless(::Type{TripletExcitationOperator}, ::Type{SingletExcitationOperatorP})
+    false
+end

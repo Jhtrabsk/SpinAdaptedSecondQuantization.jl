@@ -169,6 +169,10 @@ function virtual(indices...)
     constrain(p => VirtualOrbital for p in indices)
 end
 
+function general(indices...)
+    constrain(p => GeneralOrbital for p in indices)
+end
+
 function Base.getindex(ex::Expression, i)
     ex.terms[i]
 end

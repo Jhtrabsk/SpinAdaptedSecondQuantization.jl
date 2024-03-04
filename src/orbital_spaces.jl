@@ -34,10 +34,9 @@ abstract type VirtualOrbital <: GeneralOrbital end
 Base.isless(::Type{S}, ::Type{S}) where {S<:GeneralOrbital} = false
 
 
-
-# A subspace of a space is considered "greater" than the parent space
-# making it come later when sorting
-Base.isless(::Type{S1}, ::Type{S2}) where {S2<:GeneralOrbital,S1<:S2} = false
+Base.isless(::Type{S}, ::Type{S}) where {S<:GeneralOrbital} = false
+Base.isless(::Type{S1}, ::Type{S2}) where
+{S1<:GeneralOrbital,S2<:GeneralOrbital} = !(S2 < S1)
 
 # Base.isless(::Type{S1}, ::Type{S2}) where {S1<:GeneralOrbital,S2<:S1} = true
 # Defining occupied orbitals to come before virtuals.

@@ -19,7 +19,7 @@ Type representing all occupied orbitals.
 """
 abstract type OccupiedOrbital <: GeneralOrbital end
 
-
+abstract type OccupiedOrbitalP <: PositronOrbital end
 """
     VirtualOrbital
 
@@ -27,6 +27,7 @@ Type representing all virtual orbitals.
 """
 abstract type VirtualOrbital <: GeneralOrbital end
 
+abstract type VirtualOrbitalP <: PositronOrbital end
 #
 # Defining relations to sort indices
 # A space is not less than itself
@@ -84,6 +85,15 @@ getshortname(::Type{GeneralOrbital}) = "G"
 getshortname(::Type{OccupiedOrbital}) = "O"
 getshortname(::Type{VirtualOrbital}) = "V"
 
+
+getnames(::Type{PositronOrbital}) = "pqrs"
+getnames(::Type{OccupiedOrbitalPositron}) = "ijklmno"
+getnames(::Type{VirtualOrbitalPositron}) = "abcdefg"
+
+getshortname(::Type{PositronOrbital}) = "GP"
+getshortname(::Type{OccupiedOrbitalPositron}) = "OP"
+getshortname(::Type{VirtualOrbitalPositron}) = "VP"
+
 function subscript(io::IO, i)
     for d in reverse!(digits(i))
         print(io, Char(0x2080 + d))
@@ -100,10 +110,17 @@ default_color(::Type{GeneralOrbital}) = :nothing
 default_color(::Type{OccupiedOrbital}) = :light_green
 default_color(::Type{VirtualOrbital}) = :cyan
 
+default_color(::Type{PositronOrbital}) = :nothing
+default_color(::Type{VirtualOrbitalPositron}) = :light_green
+default_color(::Type{OccupiedOrbitalPositron}) = :cyan
+
 colors::Dict{Type,Union{Symbol,Int}} = Dict{Type,Union{Symbol,Int}}([
     GeneralOrbital => default_color(GeneralOrbital),
     OccupiedOrbital => default_color(OccupiedOrbital),
     VirtualOrbital => default_color(VirtualOrbital),
+    PositronOrbital => default_color(PositronOrbital),
+    VirtualOrbitalPositron => default_color(VirtualOrbitalPositron),
+    OccupiedOrbitalPositron => default_color(OccupiedOrbitalPositron),
 ])
 
 function getname(io::IO, ::Type{S}, i::Int) where {S<:GeneralOrbital}

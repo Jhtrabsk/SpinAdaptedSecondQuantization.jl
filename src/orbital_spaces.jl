@@ -87,12 +87,12 @@ getshortname(::Type{VirtualOrbital}) = "V"
 
 
 getnames(::Type{PositronOrbital}) = "pqrs"
-getnames(::Type{OccupiedOrbitalPositron}) = "ijklmno"
-getnames(::Type{VirtualOrbitalPositron}) = "abcdefg"
+getnames(::Type{VirtualOrbitalP}) = "ijklmno"
+getnames(::Type{VirtualOrbitalP}) = "abcdefg"
 
 getshortname(::Type{PositronOrbital}) = "GP"
-getshortname(::Type{OccupiedOrbitalPositron}) = "OP"
-getshortname(::Type{VirtualOrbitalPositron}) = "VP"
+getshortname(::Type{VirtualOrbitalP}) = "OP"
+getshortname(::Type{VirtualOrbitalP}) = "VP"
 
 function subscript(io::IO, i)
     for d in reverse!(digits(i))
@@ -111,16 +111,16 @@ default_color(::Type{OccupiedOrbital}) = :light_green
 default_color(::Type{VirtualOrbital}) = :cyan
 
 default_color(::Type{PositronOrbital}) = :nothing
-default_color(::Type{VirtualOrbitalPositron}) = :light_green
-default_color(::Type{OccupiedOrbitalPositron}) = :cyan
+default_color(::Type{VirtualOrbitalP}) = :light_green
+default_color(::Type{VirtualOrbitalP}) = :cyan
 
 colors::Dict{Type,Union{Symbol,Int}} = Dict{Type,Union{Symbol,Int}}([
     GeneralOrbital => default_color(GeneralOrbital),
     OccupiedOrbital => default_color(OccupiedOrbital),
     VirtualOrbital => default_color(VirtualOrbital),
     PositronOrbital => default_color(PositronOrbital),
-    VirtualOrbitalPositron => default_color(VirtualOrbitalPositron),
-    OccupiedOrbitalPositron => default_color(OccupiedOrbitalPositron),
+    VirtualOrbitalP => default_color(VirtualOrbitalP),
+    VirtualOrbitalP => default_color(VirtualOrbitalP),
 ])
 
 function getname(io::IO, ::Type{S}, i::Int) where {S<:GeneralOrbital}

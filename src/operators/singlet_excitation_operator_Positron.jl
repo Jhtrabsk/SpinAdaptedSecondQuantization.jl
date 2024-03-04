@@ -61,8 +61,8 @@ end
 function act_on_ket_positrons(op::SingletExcitationOperatorP)
     p = op.p
     q = op.q
-    E_p(p, q) * virtual(p) * occupied(q) +
-    2 * δ(p, q) * occupied(p, q)
+    E_p(p, q) * virtualP(p) * occupiedP(q) +
+    2 * δ(p, q) * occupiedP(p, q)
 end
 
 function Base.adjoint(op::SingletExcitationOperatorP)

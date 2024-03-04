@@ -105,5 +105,6 @@ function act_on_ket_positrons(t::Term{A}, max_ops) where {A<:Number}
     Expression(terms)
 end
 
-export hf_expectation_value
+export hf_expectation_value, hf_expectation_value_positron
 hf_expectation_value(ex::Expression) = act_on_ket(ex, 0)
+hf_expectation_value_positron(ex::Expression) = act_on_ket(ex, 0)

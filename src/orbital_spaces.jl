@@ -19,8 +19,6 @@ Type representing all occupied orbitals.
 """
 abstract type OccupiedOrbital <: GeneralOrbital end
 
-abstract type OccupiedOrbitalP <: PositronOrbital end
-
 
 """
     VirtualOrbital
@@ -29,18 +27,11 @@ Type representing all virtual orbitals.
 """
 abstract type VirtualOrbital <: GeneralOrbital end
 
-abstract type VirtualOrbitalP <: PositronOrbital end
-
 #
 # Defining relations to sort indices
 # A space is not less than itself
 #
 Base.isless(::Type{S}, ::Type{S}) where {S<:GeneralOrbital} = false
-Base.isless(::Type{S1}, ::Type{S2}) where {S1<:GeneralOrbital,S2<:GeneralOrbital} = !(S2 < S1)
-Base.isless(::Type{S1}, ::Type{S2}) where {S1<:PositronOrbital,S2<:PositronOrbital} = !(S2 < S1)
-
-Base.isless(::Type{S1}, ::Type{S2}) where {S1<:PositronOrbital,S2<:GeneralOrbital} = !(S2 < S1)
-Base.isless(::Type{S1}, ::Type{S2}) where {S1<:GeneralOrbital,S2<:PositronOrbital} = !(S2 < S1)
 
 
 

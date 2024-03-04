@@ -177,11 +177,11 @@ function generalP(indices...)
 end
 
 function virtualP(indices...)
-    constrain(p => VirtualOrbitalPositron for p in indices)
+    constrain(p => VirtualOrbitalP for p in indices)
 end
 
 function occupiedP(indices...)
-    constrain(p => OccupiedOrbitalPositron for p in indices)
+    constrain(p => OccupiedOrbitalP for p in indices)
 end
 
 function Base.getindex(ex::Expression, i)

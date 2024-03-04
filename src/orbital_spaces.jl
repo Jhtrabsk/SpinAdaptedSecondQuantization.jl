@@ -19,12 +19,18 @@ Type representing all occupied orbitals.
 """
 abstract type OccupiedOrbital <: GeneralOrbital end
 
+abstract type OccupiedOrbitalP <: PositronOrbital end
+
+
 """
     VirtualOrbital
 
 Type representing all virtual orbitals.
 """
 abstract type VirtualOrbital <: GeneralOrbital end
+
+abstract type VirtualOrbitalP <: PositronOrbital end
+
 #
 # Defining relations to sort indices
 # A space is not less than itself

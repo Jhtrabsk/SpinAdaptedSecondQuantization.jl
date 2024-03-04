@@ -9,9 +9,14 @@ abstract type Operator end
 
 include("operators/singlet_excitation_operator.jl")
 include("operators/triplet_excitation_operator.jl")
+include("operators/singlet_excitation_operator_Positron.jl")
+
+
 include("operators/fermion_operator.jl")
 include("operators/boson_operator.jl")
+include("operators/commutation_positrons.jl")
 
+include
 include("operators/sorting.jl")
 include("operators/commutation_relations.jl")
 

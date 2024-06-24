@@ -193,9 +193,9 @@ function CC_ref_energy(F, g, L, t, t2, o, v)
     E = 0.0
     E = E .+  +2.00000000  * np.einsum("ii->", extract_mat(F, "oo", o, v), optimize="optimal");
     E = E .+  -1.00000000  * np.einsum("iijj->", extract_mat(L, "oooo", o, v), optimize="optimal");
-    #E = E .+  +1.00000000  * np.einsum("ia,ai->", extract_mat(F, "ov", o, v), extract_mat(t, "vo", o, v), optimize="optimal");
+    E = E .+  +1.00000000  * np.einsum("ia,ai->", extract_mat(F, "ov", o, v), extract_mat(t, "vo", o, v), optimize="optimal");
     E = E .+  +1.00000000  * np.einsum("iajb,aibj->", extract_mat(L, "ovov", o, v), extract_mat(t2, "vovo", o, v), optimize="optimal");
-    #E = E .+  +0.25000000  * np.einsum("iajb,ai,bj->", extract_mat(L, "ovov", o, v), extract_mat(t, "vo", o, v), extract_mat(t, "vo", o, v), optimize="optimal");
+    E = E .+  +0.25000000  * np.einsum("iajb,ai,bj->", extract_mat(L, "ovov", o, v), extract_mat(t, "vo", o, v), extract_mat(t, "vo", o, v), optimize="optimal");
                 
     return E
 end
@@ -602,7 +602,20 @@ function Omega_AI_aibj(F, L, g, h_p, g_p, s, s2, t, u, o, v)
     
     end
 
-    Omega_AI_bjai = zeros(v[end]-1, v[end] - o[end], o[end], v[end] - o[end], o[end])
+    ##
+    ## Symmetrizer
+    ##
+
+    for B in 2:v[end]
+        for i = 1:o[end]
+            for j = 1:v[end] - o[end]
+    
+               Omega_AI_bjai[B-1,:,:,j,i] = Omega_AI_bjai[B-1,j,i,:,:]
+
+            end 
+        end
+    end 
+
 
     return Omega_AI_bjai
 end
@@ -687,7 +700,13 @@ qmmm = pyimport("pyscf.qmmm")
 # Specify diffierentasis for different ghost atoms
 #
 
-mol = pyscf.M(atom="H 0.0, 0.0, 0.0; Li 1.606, 0.0, 0.0", basis= "ccPVDZ")
+mol = pyscf.M(atom="H          0.86681        0.60144        0.00000; 
+H         -0.86681        0.60144        0.00000;
+O          0.00000       -0.07579        0.00000", basis= "ccPVDZ")
+
+##
+## refrence energy: -76.01857633339229
+##
 
 mf = scf.RHF(mol)
 mf.conv_tol = 1e-14
@@ -1145,7 +1164,7 @@ let
         # t_aiai = 0.0
 
         global t2[v, o, v, o] += reshape(amplitudes[v[end] + n + n*(v[end]-1):  v[end] - 1 + n + n*(v[end]-1) + n^2], (nv, no, nv, no)) ./ pre_t2[v, o, v, o]
-        global s2[1, 2:v[end], v, o, v, o] += reshape(amplitudes[v[end] + n + n*(v[end]-1) + n^2: end], (v[end]-1, nv, no, nv, no)) ./ pre_s2[1:v[end]-1,v, o, v, o]
+        global s2[2:v[end],1, v, o, v, o] += reshape(amplitudes[v[end] + n + n*(v[end]-1) + n^2: end], (v[end]-1, nv, no, nv, no)) ./ pre_s2[1:v[end]-1,v, o, v, o]
 
         #else 
 
@@ -1161,7 +1180,7 @@ let
         println(size(t2), "t2 size", n^2)
         println(size(t), "t1 size", n)
         
-        s2[2:v[end],1, v, o, v, o] = zeros(v[end]-1, v[end] - o[end], o[end], v[end] - o[end], o[end])
+        #s2[2:v[end],1, v, o, v, o] = zeros(v[end]-1, v[end] - o[end], o[end], v[end] - o[end], o[end])
         #s[1, 2:v[end], v, o] = zeros(v[end]-1, v[end] - o[end], o[end])
         #global s2[a,i,a,i] = 0.0 
         u = zeros(v[end],v[end],v[end],v[end])
@@ -1179,22 +1198,6 @@ let
         display(s2[1, 2:v[end], v, o, v, o])
         println("Module of t ", sqrt(sum([abs(e)^2 for e in t])))
         #println("Precond s: ", pre_smat[v,o] )
-
-        function print_amptitudes(gamma, t, t2, s, s2)
-
-            display(gamma)
-            println("amplitudes gamma")
-            display(t)
-            println("amplitudes t")
-            display(t2)
-            println("amplitudes t2")
-            display(s)
-            println("amplitudes s")
-            display(s2)
-            println("amplitudes s2")
-
-        end
-
         #print_amptitudes(gamma, t, t2, s, s2)
 
 

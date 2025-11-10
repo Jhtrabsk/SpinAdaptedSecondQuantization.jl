@@ -32,7 +32,7 @@ end
 function cc_ket_P(H, T, n, order, photon_order)
     # HT = e^-T H eT |HF>
     HT = bch(H, T, n) |> x -> act_on_ket(x, order + photon_order) |> simplify
-
+    
     # Return only terms of op_length = order
     return project(HT, order, photon_order)
 end

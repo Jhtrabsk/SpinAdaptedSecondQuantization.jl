@@ -1,0 +1,12 @@
+E_ai[:,:] +=  +0.50000000  * extract_mat(g_p, "IIvo", o, v) * extract_mat(p3, "AI", o, v);
+E_ai[:,:] = E_ai[:,:] .+  -0.50000000  * fixed_einsum("Bai,B->ai", extract_mat(g_p, "AVvo", o, v), extract_mat(p3, "VI", o, v), optimize="optimal");
+E_ai[:,:] = E_ai[:,:] .+  -0.50000000  * extract_mat(p3, "AI", o, v) * fixed_einsum("B,Bai->ai", extract_mat(h_p, "IV", o, v), extract_mat(s, "VIvo", o, v), optimize="optimal");
+E_ai[:,:] = E_ai[:,:] .+  -0.50000000  * extract_mat(s, "AIvo", o, v) * fixed_einsum("B,B->", extract_mat(h_p, "IV", o, v), extract_mat(p3, "VI", o, v), optimize="optimal");
+E_ai[:,:] = E_ai[:,:] .+  +1.00000000  * extract_mat(p3, "AI", o, v) * fixed_einsum("Bjj,Bai->ai", extract_mat(g_p, "IVoo", o, v), extract_mat(s, "VIvo", o, v), optimize="optimal");
+E_ai[:,:] = E_ai[:,:] .+  +1.00000000  * extract_mat(s, "AIvo", o, v) * fixed_einsum("Bjj,B->", extract_mat(g_p, "IVoo", o, v), extract_mat(p3, "VI", o, v), optimize="optimal");
+E_ai[:,:] = E_ai[:,:] .+  -0.50000000  * extract_mat(p3, "AI", o, v) * fixed_einsum("Bji,Baj->ai", extract_mat(g_p, "IVoo", o, v), extract_mat(s, "VIvo", o, v), optimize="optimal");
+E_ai[:,:] = E_ai[:,:] .+  +0.50000000  * extract_mat(p3, "AI", o, v) * fixed_einsum("Bab,Bbi->ai", extract_mat(g_p, "IVvv", o, v), extract_mat(s, "VIvo", o, v), optimize="optimal");
+E_ai[:,:] = E_ai[:,:] .+  +0.50000000  * extract_mat(p3, "AI", o, v) * fixed_einsum("jb,bjai->ai", extract_mat(g_p, "IIov", o, v), extract_mat(u, "vovo", o, v), optimize="optimal");
+E_ai[:,:] = E_ai[:,:] .+  +1.00000000  * extract_mat(p3, "AI", o, v) * fixed_einsum("Bjb,Bbjai->ai", extract_mat(g_p, "IVov", o, v), extract_mat(s2, "VIvovo", o, v), optimize="optimal");
+E_ai[:,:] = E_ai[:,:] .+  -0.50000000  * extract_mat(p3, "AI", o, v) * fixed_einsum("Bjb,Bbiaj->ai", extract_mat(g_p, "IVov", o, v), extract_mat(s2, "VIvovo", o, v), optimize="optimal");
+E_ai[:,:] = E_ai[:,:] .+  -0.50000000  * fixed_einsum("Bjb,B,bjai->ai", extract_mat(g_p, "AVov", o, v), extract_mat(p3, "VI", o, v), extract_mat(u, "vovo", o, v), optimize="optimal");

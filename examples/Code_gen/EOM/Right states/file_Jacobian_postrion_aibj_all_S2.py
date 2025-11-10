@@ -1,0 +1,12 @@
+E_bjai[:,:,:,:] = E_bjai[:,:,:,:] .+  +0.50000000  * fixed_einsum("A,Aaibj->bjai", extract_mat(h_p, "IV", o, v), extract_mat(p2, "VIvovo", o, v), optimize="optimal");
+E_bjai[:,:,:,:] = E_bjai[:,:,:,:] .+  +0.50000000  * fixed_einsum("A,Abjai->bjai", extract_mat(h_p, "IV", o, v), extract_mat(p2, "VIvovo", o, v), optimize="optimal");
+E_bjai[:,:,:,:] = E_bjai[:,:,:,:] .+  -1.00000000  * fixed_einsum("Akk,Aaibj->bjai", extract_mat(g_p, "IVoo", o, v), extract_mat(p2, "VIvovo", o, v), optimize="optimal");
+E_bjai[:,:,:,:] = E_bjai[:,:,:,:] .+  -1.00000000  * fixed_einsum("Akk,Abjai->bjai", extract_mat(g_p, "IVoo", o, v), extract_mat(p2, "VIvovo", o, v), optimize="optimal");
+E_bjai[:,:,:,:] = E_bjai[:,:,:,:] .+  +0.50000000  * fixed_einsum("Aki,Aakbj->bjai", extract_mat(g_p, "IVoo", o, v), extract_mat(p2, "VIvovo", o, v), optimize="optimal");
+E_bjai[:,:,:,:] = E_bjai[:,:,:,:] .+  +0.50000000  * fixed_einsum("Aki,Abjak->bjai", extract_mat(g_p, "IVoo", o, v), extract_mat(p2, "VIvovo", o, v), optimize="optimal");
+E_bjai[:,:,:,:] = E_bjai[:,:,:,:] .+  +0.50000000  * fixed_einsum("Akj,Aaibk->bjai", extract_mat(g_p, "IVoo", o, v), extract_mat(p2, "VIvovo", o, v), optimize="optimal");
+E_bjai[:,:,:,:] = E_bjai[:,:,:,:] .+  +0.50000000  * fixed_einsum("Akj,Abkai->bjai", extract_mat(g_p, "IVoo", o, v), extract_mat(p2, "VIvovo", o, v), optimize="optimal");
+E_bjai[:,:,:,:] = E_bjai[:,:,:,:] .+  -0.50000000  * fixed_einsum("Aac,Acibj->bjai", extract_mat(g_p, "IVvv", o, v), extract_mat(p2, "VIvovo", o, v), optimize="optimal");
+E_bjai[:,:,:,:] = E_bjai[:,:,:,:] .+  -0.50000000  * fixed_einsum("Aac,Abjci->bjai", extract_mat(g_p, "IVvv", o, v), extract_mat(p2, "VIvovo", o, v), optimize="optimal");
+E_bjai[:,:,:,:] = E_bjai[:,:,:,:] .+  -0.50000000  * fixed_einsum("Abc,Acjai->bjai", extract_mat(g_p, "IVvv", o, v), extract_mat(p2, "VIvovo", o, v), optimize="optimal");
+E_bjai[:,:,:,:] = E_bjai[:,:,:,:] .+  -0.50000000  * fixed_einsum("Abc,Aaicj->bjai", extract_mat(g_p, "IVvv", o, v), extract_mat(p2, "VIvovo", o, v), optimize="optimal");

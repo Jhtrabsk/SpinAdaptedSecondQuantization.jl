@@ -160,10 +160,10 @@ function CC_Energy(F, L, g, h_p, g_p, s, u ,o, v)
 
     #E +=  +1.00000000  * extract_mat(h_p, "II", o, v);
     E = E .+  +2.00000000  * fixed_einsum("ii->", extract_mat(F, "oo", o, v, B), optimize="optimal");
-    #E = E .+  -2.00000000  * fixed_einsum("ii->", extract_mat(g_p, "IIoo", o, v, B), optimize="optimal");
+    E = E .+  -2.00000000  * fixed_einsum("ii->", extract_mat(g_p, "IIoo", o, v, B), optimize="optimal");
     E = E .+  -1.00000000  * fixed_einsum("iijj->", extract_mat(L, "oooo", o, v, B), optimize="optimal");
-   # E = E .+  -2.00000000  * fixed_einsum("Aia,Aai->", extract_mat(g_p, "IVov", o, v, B), extract_mat(s, "VIvo", o, v, B), optimize="optimal");
-    E = E .+  +1.00000000  * fixed_einsum("iajb,aibj->", extract_mat(g, "ovov", o, v, B), extract_mat(u, "vovo", o, v, B), optimize="optimal");
+    E = E .+  -2.00000000  * fixed_einsum("Aia,Aai->", extract_mat(g_p, "IVov", o, v, B), extract_mat(s, "VIvo", o, v, B), optimize="optimal");
+#    E = E .+  +1.00000000  * fixed_einsum("iajb,aibj->", extract_mat(g, "ovov", o, v, B), extract_mat(u, "vovo", o, v, B), optimize="optimal");
     
     return E
 end
@@ -607,7 +607,7 @@ qmmm = pyimport("pyscf.qmmm")
 # Specify diffierent basis for different ghost atoms
 #
 
-mol = pyscf.M(atom="H 0.0, 0.0, 0.0; Li 1.606, 0.0, 0.0", basis= "sto3g")
+mol = pyscf.M(atom="H 0.0, 0.0, 0.0; Li 1.606, 0.0, 0.0", basis= "sto6g")
 
 mf = scf.RHF(mol)
 mf.conv_tol = 1e-10
@@ -776,7 +776,6 @@ function construcu_hf_p()
     F = diagm(e)
     F_p = diagm(e_p)
 
-
     h = C'*h_ao*C
     h_p = C_p' * h_ao_p * C_p
 
@@ -801,7 +800,7 @@ function construcu_hf_p()
     println(HF_p(F, h, h_p, g_p, o, v) +  hf.mol.energy_nuc())
     println("Energy")
  
-    display(C_p)
+    display(sort(C_p))
     print("C_p")
     display(C)
     print("C")
@@ -841,9 +840,6 @@ function construcu_hf_p()
 end 
 
 h_p, g_p, F, F_p, L = construcu_hf_p()
-
-exit()
-
 
 ## Fix down here 
 # h = F .- np.einsum("pqii->pq", L[:, :, o, o], optimize="optimal")

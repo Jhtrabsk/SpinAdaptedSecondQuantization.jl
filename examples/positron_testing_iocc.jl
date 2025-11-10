@@ -134,6 +134,7 @@ function print_code_einsum_testing(t::SASQ.Term, symbol::String, translation, fi
         end
     end
 
+
     # Printing depending on deltas
     if length(external) >= 2
         pre_string = "$(symbol)_$(external)"
@@ -322,8 +323,6 @@ open("file_omega_AIai.py", "w") do output_file
         println(output_file, print_code_einsum_testing(t, "Omega_AI", SASQ.IndexTranslation(), ['A','I']))
     end
 end
-
-
 
 # Omega_AIaibj
 

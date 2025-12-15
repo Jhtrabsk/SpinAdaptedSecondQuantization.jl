@@ -7,8 +7,8 @@ E_ai[:,:] = E_ai[:,:] .+  +0.50000000  * fixed_einsum("bjia,bj->ai", extract_mat
 E_ai[:,:] = E_ai[:,:] .+  -1.00000000  * fixed_einsum("Bjj,Bai->ai", extract_mat(g_p, "VAoo", o, v), extract_mat(p, "VIvo", o, v), optimize="optimal");
 E_ai[:,:] = E_ai[:,:] .+  -0.50000000  * fixed_einsum("Bba,Bbi->ai", extract_mat(g_p, "VAvv", o, v), extract_mat(p, "VIvo", o, v), optimize="optimal");
 E_ai[:,:] = E_ai[:,:] .+  +0.50000000  * fixed_einsum("Bij,Baj->ai", extract_mat(g_p, "VAoo", o, v), extract_mat(p, "VIvo", o, v), optimize="optimal");
-E_ai[:,:] = E_ai[:,:] .+  -1.00000000  * fixed_einsum("ia,Bbj,Bbj->ai", extract_mat(F, "ov", o, v), extract_mat(p, "VIvo", o, v), extract_mat(s, "VAvo", o, v), optimize="optimal");
 E_ai[:,:] = E_ai[:,:] .+  +1.00000000  * extract_mat(p, "AIvo", o, v) * fixed_einsum("Bjb,Bbj->", extract_mat(g_p, "IVov", o, v), extract_mat(s, "VIvo", o, v), optimize="optimal");
+E_ai[:,:] = E_ai[:,:] .+  +1.00000000  * fixed_einsum("ia,Bbj,Bbj->ai", extract_mat(g_p, "IAov", o, v), extract_mat(p, "VIvo", o, v), extract_mat(s, "VIvo", o, v), optimize="optimal");
 E_ai[:,:] = E_ai[:,:] .+  +0.50000000  * fixed_einsum("jbia,ck,bjck->ai", extract_mat(L, "ovov", o, v), extract_mat(p, "AIvo", o, v), extract_mat(u, "vovo", o, v), optimize="optimal");
 E_ai[:,:] = E_ai[:,:] .+  -0.50000000  * fixed_einsum("jbka,ci,bjck->ai", extract_mat(g, "ovov", o, v), extract_mat(p, "AIvo", o, v), extract_mat(u, "vovo", o, v), optimize="optimal");
 E_ai[:,:] = E_ai[:,:] .+  -0.50000000  * fixed_einsum("jbic,ak,bjck->ai", extract_mat(g, "ovov", o, v), extract_mat(p, "AIvo", o, v), extract_mat(u, "vovo", o, v), optimize="optimal");

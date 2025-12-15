@@ -10,3 +10,5 @@ E = E .+  +0.50000000  * fixed_einsum("ia,bj,aibj->", extract_mat(g_p, "IIov", o
 E = E .+  +1.00000000  * fixed_einsum("Bia,bj,Baibj->", extract_mat(g_p, "IVov", o, v), extract_mat(p, "AIvo", o, v), extract_mat(s2, "VIvovo", o, v), optimize="optimal");
 E = E .+  -0.50000000  * fixed_einsum("Bia,bj,Bajbi->", extract_mat(g_p, "IVov", o, v), extract_mat(p, "AIvo", o, v), extract_mat(s2, "VIvovo", o, v), optimize="optimal");
 E = E .+  -0.50000000  * fixed_einsum("Bia,Bbj,aibj->", extract_mat(g_p, "VAov", o, v), extract_mat(p, "VIvo", o, v), extract_mat(u, "vovo", o, v), optimize="optimal");
+
+

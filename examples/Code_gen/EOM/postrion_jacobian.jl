@@ -251,7 +251,7 @@ deex_braop(a, i, b, j) = 1 // 3 * ex_ketop(a, i, b, j)' +
 ex_positron(a, b) = E(a, b) * ivir(a, b)
 ex_positron(a, b, c, d) = E(a, i) * E(b, j) * ivir(a, b, c, d)
 
-deex_positron(a, i) = 1 // 2 * ex_positron(a, i)'     #probabily this 1/2 can be removed
+deex_positron(a, i) = ex_positron(a, i)'     #probabily this 1/2 can be removed
 deex_positron(a, i, b, j) = 1 // 3 * ex_positron(a, i, b, j)' +
                             1 // 6 * ex_positron(a, j, b, i)'
 
@@ -290,7 +290,7 @@ Gamma = ∑(s(1, 2) * ex_positron(1,2), 1:2)
 c_one = summation(real_tensor("c1", 5, 6) * E(5, 6) * virtual(5) * occupied(6), 5:6)
 c_two = summation(psym_tensor("c2", 5, 6, 7, 8) * E(5, 6) * E(7, 8) * virtual(5) * occupied(6) * virtual(7) * occupied(8), 5:8)
 Gamma =  ∑(p3(2, 1) * ex_positron(2,1), 2:2)
-S_two =  1 // 2 * ∑(real_tensor("p2", 2,1,3,4,5,6) * ex_positron(2,1) * ex_ketop(3,4,5,6),2:6)
+S_two =  ∑(real_tensor("p2", 2,1,3,4,5,6) * ex_positron(2,1) * ex_ketop(3,4,5,6),2:6)
 S_one =  ∑(p(2, 1, 3, 4) * ex_positron(2,1) * ex_ketop(3,4), 1:4)
 
 ##
@@ -300,11 +300,11 @@ S_one =  ∑(p(2, 1, 3, 4) * ex_positron(2,1) * ex_ketop(3,4), 1:4)
 @show c_one_t = summation(real_tensor("c1", 5, 6) * deex_braop(5,6), 5:6)
 @show c_two_t = summation(psym_tensor("c2", 5, 6, 7, 8) * deex_braop(5,6,7,8), 5:8)
 @show S_one_t =  ∑(p(2, 1, 3, 4) * deex_positron(2,1) * deex_braop(3,4), 2:4)
-@show S_two_t =  1 // 2 * ∑(p2(2,1,3,4,5,6) * deex_positron(2,1) * deex_braop(3,4,5,6), 2:6)
+@show S_two_t =  ∑(p2(2,1,3,4,5,6) * deex_positron(2,1) * deex_braop(3,4,5,6), 2:6)
 @show Gamma_t =  ∑(p3(2,1) * deex_positron(2,1), 2:2)
 
-@show S2_t = 1 // 2 * ∑(real_tensor("s2", 2,1,3,4,5,6) * ex_positron(2,1) * ex_ketop(3,4,5,6), 1:6)
-@show S1_t = ∑(s(2,1,3,4) * ex_positron(2,1) * ex_ketop(3,4), 1:4)
+@show S2_t = 1//2* ∑(real_tensor("s2", 2,1,3,4,5,6) * ex_positron(2,1) * ex_ketop(3,4,5,6), 2:6)
+@show S1_t = ∑(s(2,1,3,4) * ex_positron(2,1) * ex_ketop(3,4), 2:4)
 
 
 T_t = S1_t + S2_t + T2
@@ -337,6 +337,27 @@ function Jacobian_com_2_left(proj1, op, n)
 
 end
 
+function Density(proj1, op, n)
+
+    E_pq = E(5, 6)*aocc(5)*aocc(6)
+    E_PQ = E(1,1)*ivir(1,2)ivir(3,4)
+    @show(right_state' * c_two_t)
+    println("here")
+    @show(T_t)
+    @show(E_PQ)
+
+    hf_expectation_value(simplify(right_state' * (1 + c_one_t + c_two_t + Gamma_t + S_one_t + S_two_t)* bch(E_PQ, T_t, n) * (right_state)))
+
+end
+
+function Eta(proj1, op, n)
+    
+    println(right_state' * c_two_t)
+    println(right_state' * proj1)
+    hf_expectation_value(simplify(right_state'*bch(commutator(op, proj1), T, n) * (right_state)))
+
+end
+
 
 
 #@show Omega_AI = omega_AI()
@@ -352,7 +373,39 @@ end
 
 
 ### IF running left on S1 or S2, change order of deex_positron(2,1) > deex_positron(1,2)
+#function jacobian_ai()
+#o = Eta(ex_ketop(10,9), HF, 2)
+#o = simplify_heavy(o)
+#o = look_for_tensor_replacements_smart(o, S_AIsymmetry)
+#o = look_for_tensor_replacements_smart(o, make_exchange_transformer("t", "u"))
+#o = look_for_tensor_replacements_smart(o, make_exchange_transformer("g", "L"))
+#return filter_unwanted(o)
+#end
+#
+#@show Jacobian_ai = jacobian_ai()
+#open("file_eta_T1.py", "w") do output_file
+#    for t in Jacobian_ai.terms
+#        println(output_file, print_code_einsum_testing(t, "E", SASQ.IndexTranslation(), ['A','I']))
+#    end
+#end
 
+function jacobian_ai()
+o = Density(ex_ketop(9,10), HF, 2)
+o = simplify_heavy(o)
+o = look_for_tensor_replacements_smart(o, S_AIsymmetry)
+o = look_for_tensor_replacements_smart(o, make_exchange_transformer("t", "u"))
+o = look_for_tensor_replacements_smart(o, make_exchange_transformer("g", "L"))
+return filter_unwanted(o)
+end
+
+@show Jacobian_ai = jacobian_ai()
+open("file_Density_positron_oo.py", "w") do output_file
+    for t in Jacobian_ai.terms
+        println(output_file, print_code_einsum_testing(t, "E", SASQ.IndexTranslation(), ['A','I']))
+    end
+end
+
+exit()
 
 function jacobian_ai()
 o = Jacobian_com_2_left(ex_ketop(9,10), HF, 2)

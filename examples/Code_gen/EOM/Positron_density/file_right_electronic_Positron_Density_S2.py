@@ -1,0 +1,3 @@
+E_AA = E_AA .+  +1.00000000  * fixed_einsum("aibj,Caibj->CB", extract_mat(L3, "AIvovo", o, v), extract_mat(R3, "VIvovo", o, v), optimize="optimal");
+E_AA = E_AA .+  +1.00000000  * fixed_einsum("aibj,Cbjai->CB", extract_mat(L3, "AIvovo", o, v), extract_mat(R3, "VIvovo", o, v), optimize="optimal");
+E_IA = E_IA .+  +2.00000000  * fixed_einsum("aibj,aibj->CB", extract_mat(R3, "AIvovo", o, v), extract_mat(l2, "vovo", o, v), optimize="optimal");

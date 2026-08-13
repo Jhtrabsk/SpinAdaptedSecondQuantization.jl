@@ -1,0 +1,2 @@
+E_CB[:,:] = E_CB[:,:] .+  +1.00000000  * fixed_einsum("aibj,ai,Cbj->CB", extract_mat(L3, "AIvovo", o, v), extract_mat(r1, "vo", o, v), extract_mat(s, "VIvo", o, v), optimize="optimal");
+E_CB[:,:] = E_CB[:,:] .+  +1.00000000  * fixed_einsum("aibj,bj,Cai->CB", extract_mat(L3, "AIvovo", o, v), extract_mat(r1, "vo", o, v), extract_mat(s, "VIvo", o, v), optimize="optimal");

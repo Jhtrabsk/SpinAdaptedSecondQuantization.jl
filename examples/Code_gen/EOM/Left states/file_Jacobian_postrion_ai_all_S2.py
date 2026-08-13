@@ -52,12 +52,14 @@ E_ai[:,:] = E_ai[:,:] .+  +0.25000000  * fixed_einsum("ABja,Abick,Bbjck->ai", ex
 E_ai[:,:] = E_ai[:,:] .+  +0.25000000  * fixed_einsum("ABib,Acjak,Bbkcj->ai", extract_mat(g_p, "VVov", o, v), extract_mat(p2, "VIvovo", o, v), extract_mat(s2, "VIvovo", o, v), optimize="optimal");
 E_ai[:,:] = E_ai[:,:] .+  +0.25000000  * fixed_einsum("ABib,Aajck,Bbjck->ai", extract_mat(g_p, "VVov", o, v), extract_mat(p2, "VIvovo", o, v), extract_mat(s2, "VIvovo", o, v), optimize="optimal");
 E_ai[:,:] = E_ai[:,:] .+  -0.50000000  * fixed_einsum("ABia,Abjck,Bbjck->ai", extract_mat(g_p, "VVov", o, v), extract_mat(p2, "VIvovo", o, v), extract_mat(s2, "VIvovo", o, v), optimize="optimal");
+
 E_ai[:,:] = E_ai[:,:] .+  -0.25000000  * fixed_einsum("Aja,Bbkci,Acj,Bbk->ai", extract_mat(g_p, "IVov", o, v), extract_mat(p2, "VIvovo", o, v), extract_mat(s, "VIvo", o, v), extract_mat(s, "VIvo", o, v), optimize="optimal");
 E_ai[:,:] = E_ai[:,:] .+  -0.25000000  * fixed_einsum("Aja,Bbick,Abj,Bck->ai", extract_mat(g_p, "IVov", o, v), extract_mat(p2, "VIvovo", o, v), extract_mat(s, "VIvo", o, v), extract_mat(s, "VIvo", o, v), optimize="optimal");
 E_ai[:,:] = E_ai[:,:] .+  -0.25000000  * fixed_einsum("Aib,Bcjak,Abk,Bcj->ai", extract_mat(g_p, "IVov", o, v), extract_mat(p2, "VIvovo", o, v), extract_mat(s, "VIvo", o, v), extract_mat(s, "VIvo", o, v), optimize="optimal");
 E_ai[:,:] = E_ai[:,:] .+  -0.25000000  * fixed_einsum("Aib,Bajck,Abj,Bck->ai", extract_mat(g_p, "IVov", o, v), extract_mat(p2, "VIvovo", o, v), extract_mat(s, "VIvo", o, v), extract_mat(s, "VIvo", o, v), optimize="optimal");
 E_ai[:,:] = E_ai[:,:] .+  +0.50000000  * fixed_einsum("Aia,Bbjck,Abj,Bck->ai", extract_mat(g_p, "IVov", o, v), extract_mat(p2, "VIvovo", o, v), extract_mat(s, "VIvo", o, v), extract_mat(s, "VIvo", o, v), optimize="optimal");
 E_ai[:,:] = E_ai[:,:] .+  +0.50000000  * fixed_einsum("Aia,Bbjck,Ack,Bbj->ai", extract_mat(g_p, "IVov", o, v), extract_mat(p2, "VIvovo", o, v), extract_mat(s, "VIvo", o, v), extract_mat(s, "VIvo", o, v), optimize="optimal");
+
 E_ai[:,:] = E_ai[:,:] .+  -0.25000000  * fixed_einsum("jbka,Acldi,Abj,cldk->ai", extract_mat(L, "ovov", o, v), extract_mat(p2, "VIvovo", o, v), extract_mat(s, "VIvo", o, v), extract_mat(t, "vovo", o, v), optimize="optimal");
 E_ai[:,:] = E_ai[:,:] .+  -0.25000000  * fixed_einsum("jbka,Acidl,Abj,ckdl->ai", extract_mat(L, "ovov", o, v), extract_mat(p2, "VIvovo", o, v), extract_mat(s, "VIvo", o, v), extract_mat(t, "vovo", o, v), optimize="optimal");
 E_ai[:,:] = E_ai[:,:] .+  -0.25000000  * fixed_einsum("jbic,Adkal,Abj,cldk->ai", extract_mat(L, "ovov", o, v), extract_mat(p2, "VIvovo", o, v), extract_mat(s, "VIvo", o, v), extract_mat(t, "vovo", o, v), optimize="optimal");
@@ -78,6 +80,7 @@ E_ai[:,:] = E_ai[:,:] .+  +0.25000000  * fixed_einsum("jbic,Adkal,Adj,bkcl->ai",
 E_ai[:,:] = E_ai[:,:] .+  +0.25000000  * fixed_einsum("jbic,Aakdl,Abk,cjdl->ai", extract_mat(g, "ovov", o, v), extract_mat(p2, "VIvovo", o, v), extract_mat(s, "VIvo", o, v), extract_mat(t, "vovo", o, v), optimize="optimal");
 E_ai[:,:] = E_ai[:,:] .+  +0.25000000  * fixed_einsum("jbic,Aakdl,Abl,ckdj->ai", extract_mat(g, "ovov", o, v), extract_mat(p2, "VIvovo", o, v), extract_mat(s, "VIvo", o, v), extract_mat(t, "vovo", o, v), optimize="optimal");
 E_ai[:,:] = E_ai[:,:] .+  +0.25000000  * fixed_einsum("jbic,Aakdl,Adj,blck->ai", extract_mat(g, "ovov", o, v), extract_mat(p2, "VIvovo", o, v), extract_mat(s, "VIvo", o, v), extract_mat(t, "vovo", o, v), optimize="optimal");
+
 E_ai[:,:] = E_ai[:,:] .+  -0.25000000  * fixed_einsum("jbka,Acldi,Adk,bjcl->ai", extract_mat(g, "ovov", o, v), extract_mat(p2, "VIvovo", o, v), extract_mat(s, "VIvo", o, v), extract_mat(u, "vovo", o, v), optimize="optimal");
 E_ai[:,:] = E_ai[:,:] .+  -0.25000000  * fixed_einsum("jbka,Acidl,Ack,bjdl->ai", extract_mat(g, "ovov", o, v), extract_mat(p2, "VIvovo", o, v), extract_mat(s, "VIvo", o, v), extract_mat(u, "vovo", o, v), optimize="optimal");
 E_ai[:,:] = E_ai[:,:] .+  -0.25000000  * fixed_einsum("jbic,Adkal,Acl,bjdk->ai", extract_mat(g, "ovov", o, v), extract_mat(p2, "VIvovo", o, v), extract_mat(s, "VIvo", o, v), extract_mat(u, "vovo", o, v), optimize="optimal");

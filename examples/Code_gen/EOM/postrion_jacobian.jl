@@ -168,7 +168,7 @@ end
 function contains_wrong_s(term)
     # Returns false if term contains s_IB 
     for tens in term.tensors
-        if ((tens.indices[1] == 1 || (tens.indices[1] > 2 && tens.indices[2] > 2)) && tens.symbol in ["s", "s2", "p", "p2", "p3"])
+        if ((tens.indices[1] == 1 || (tens.indices[1] > 2 && tens.indices[2] > 2)) && tens.symbol in ["s", "s2", "p", "p2", "p3", "R1", "R2", "R3", "L1", "L2", "L3"])
             return false
         end
     end
@@ -178,7 +178,7 @@ end
 function fix_B(term)
     # If the term contains s_AB, it adds δ_BI and removes max_simplify
     for tens in term.tensors
-        if (tens.indices[1] == 2 && tens.indices[2] >= 2 && tens.symbol in ["s", "s2", "p", "p2", "p3"])
+        if (tens.indices[1] == 2 && tens.indices[2] >= 2 && tens.symbol in ["s", "s2", "p", "p2", "p3", "R1", "R2", "R3", "L1", "L2", "L3"])
             push!(term.deltas, SASQ.KroneckerDelta([1, tens.indices[2]]))
             term = SASQ.new_constraints(term, term.constraints)
         end
@@ -261,15 +261,22 @@ p3(inds...) = real_tensor("p3", inds...)
 p2(inds...) = real_tensor("p2", inds...)
 p(inds...) = real_tensor("p", inds...)
 
+L1(inds...) = real_tensor("L1", inds...)
+L2(inds...) = real_tensor("L2", inds...)
+L3(inds...) = real_tensor("L3", inds...)
+
+R1(inds...) = real_tensor("R1", inds...)
+R2(inds...) = real_tensor("R2", inds...)
+R3(inds...) = real_tensor("R3", inds...)
+
 
 T2 = 1 // 2 * ∑(
     t(1:4...) * ex_ketop(1, 2, 3, 4),
     1:4
 )
 
-T1 = ∑(t(1, 2)  * ex_ketop(1,2), 1:2)
-S1 = ∑(s(1, 2, 3, 4) * ex_positron(1,2) * ex_ketop(3,4), 1:4)
-S2 = 1 // 2 * ∑(real_tensor("s2", 1:6...) * ex_positron(1,2)* ex_ketop(3,4,5,6),1:6)
+S1 = ∑(s(2, 1, 3, 4) * ex_positron(2,1) * ex_ketop(3,4), 2:4)
+S2 = 1 // 2 * ∑(real_tensor("s2", 2,1,3,4,5,6) * ex_positron(2,1)* ex_ketop(3,4,5,6),2:6)
 
 #Gamma = ∑(s(1, 2)  * ex_positron(1,2), 1:2)
 
@@ -285,30 +292,25 @@ T = S1 + S2 + T2
 
 s(inds...) = real_tensor("s", inds...)
 
-Gamma = ∑(s(1, 2) * ex_positron(1,2), 1:2)
-
-c_one = summation(real_tensor("c1", 5, 6) * E(5, 6) * virtual(5) * occupied(6), 5:6)
-c_two = summation(psym_tensor("c2", 5, 6, 7, 8) * E(5, 6) * E(7, 8) * virtual(5) * occupied(6) * virtual(7) * occupied(8), 5:8)
-Gamma =  ∑(p3(2, 1) * ex_positron(2,1), 2:2)
-S_two =  ∑(real_tensor("p2", 2,1,3,4,5,6) * ex_positron(2,1) * ex_ketop(3,4,5,6),2:6)
-S_one =  ∑(p(2, 1, 3, 4) * ex_positron(2,1) * ex_ketop(3,4), 1:4)
-
+c_one = summation(real_tensor("r1", 5, 6) * E(5, 6) * virtual(5) * occupied(6), 5:6)
+c_two = summation(psym_tensor("r2", 5, 6, 7, 8) * E(5, 6) * E(7, 8) * virtual(5) * occupied(6) * virtual(7) * occupied(8), 5:8)
+Gamma =  ∑(R1(2,1) * ex_positron(2,1), 2:2)
+S_two =  ∑(real_tensor("R3", 2,1,3,4,5,6) * ex_positron(2,1) * ex_ketop(3,4,5,6),2:6)
+S_one =  ∑(R2(2,1,3,4) * ex_positron(2,1) * ex_ketop(3,4), 2:4)
 ##
 ## Left Operator
 ##
 
-@show c_one_t = summation(real_tensor("c1", 5, 6) * deex_braop(5,6), 5:6)
-@show c_two_t = summation(psym_tensor("c2", 5, 6, 7, 8) * deex_braop(5,6,7,8), 5:8)
-@show S_one_t =  ∑(p(2, 1, 3, 4) * deex_positron(2,1) * deex_braop(3,4), 2:4)
-@show S_two_t =  ∑(p2(2,1,3,4,5,6) * deex_positron(2,1) * deex_braop(3,4,5,6), 2:6)
-@show Gamma_t =  ∑(p3(2,1) * deex_positron(2,1), 2:2)
+@show c_one_t = summation(real_tensor("l1", 5, 6) * deex_braop(5,6), 5:6)
+@show c_two_t = summation(psym_tensor("l2", 5, 6, 7, 8) * deex_braop(5,6,7,8), 5:8)
+@show S_one_t =  ∑(L2(2, 1, 3, 4) * deex_positron(2,1) * deex_braop(3,4), 2:4)
+@show S_two_t =  ∑(L3(2,1,3,4,5,6) * deex_positron(2,1) * deex_braop(3,4,5,6), 2:6)
+@show Gamma_t =  ∑(L1(2,1) * deex_positron(2,1), 2:2)
 
 @show S2_t = 1//2* ∑(real_tensor("s2", 2,1,3,4,5,6) * ex_positron(2,1) * ex_ketop(3,4,5,6), 2:6)
 @show S1_t = ∑(s(2,1,3,4) * ex_positron(2,1) * ex_ketop(3,4), 2:4)
 
-
-T_t = S1_t + S2_t + T2
-
+T_t = T2 + S2_t + S1_t
 
 ##
 ##  Gamma 
@@ -317,6 +319,11 @@ T_t = S1_t + S2_t + T2
 function omega(proj, op, n)
     
     hf_expectation_value(simplify(right_state' * proj * bch(op, T_t, n) * right_state))
+end
+
+function omega_multiplayer(proj, op, n)
+    
+    hf_expectation_value(simplify(right_state' * (1 + c_one_t + c_two_t + Gamma_t + S_one_t + S_two_t) * bch(HF, T_t, n) * right_state))
 end
 
 function Jacobian_com_2_right(proj1, op, n)
@@ -329,24 +336,24 @@ function Jacobian_com_2_right(proj1, op, n)
 end 
 ###
 
-function Jacobian_com_2_left(proj1, op, n)
+function Jacobian_com_2_left(proj2, proj1, op, n)
 
     println(right_state' * c_one_t)
     println(right_state' * proj1)
-    hf_expectation_value(simplify(right_state' * c_one_t * bch(commutator(op, proj1), T, n) * (right_state)))
+    hf_expectation_value(simplify(right_state' * proj2 * bch(commutator(op, proj1), T, n) * (right_state)))
 
 end
 
 function Density(proj1, op, n)
 
-    E_pq = E(5, 6)*aocc(5)*aocc(6)
-    E_PQ = E(1,1)*ivir(1,2)ivir(3,4)
+    E_pq = E(5, 6)*active(5)*active(6)
+    E_PQ = E(1,2)*ivir(1,2)ivir(3,4)
     @show(right_state' * c_two_t)
     println("here")
     @show(T_t)
     @show(E_PQ)
 
-    hf_expectation_value(simplify(right_state' * (1 + c_one_t + c_two_t + Gamma_t + S_one_t + S_two_t)* bch(E_PQ, T_t, n) * (right_state)))
+    hf_expectation_value(simplify(right_state' * (1 + c_one_t + c_two_t + Gamma_t + S_one_t + S_two_t)* bch(E_PQ*S_two, T_t, n) * (right_state)))
 
 end
 
@@ -371,7 +378,6 @@ end
 ### Jacobian
 ###
 
-
 ### IF running left on S1 or S2, change order of deex_positron(2,1) > deex_positron(1,2)
 #function jacobian_ai()
 #o = Eta(ex_ketop(10,9), HF, 2)
@@ -381,6 +387,7 @@ end
 #o = look_for_tensor_replacements_smart(o, make_exchange_transformer("g", "L"))
 #return filter_unwanted(o)
 #end
+
 #
 #@show Jacobian_ai = jacobian_ai()
 #open("file_eta_T1.py", "w") do output_file
@@ -389,8 +396,69 @@ end
 #    end
 #end
 
+# function jacobian_ai()
+# o = omega_multiplayer(ex_ketop(9,10), HF, 2)
+# o = simplify_heavy(o)
+# o = look_for_tensor_replacements_smart(o, S_AIsymmetry)
+# o = look_for_tensor_replacements_smart(o, make_exchange_transformer("t", "u"))
+# o = look_for_tensor_replacements_smart(o, make_exchange_transformer("g", "L"))
+# return filter_unwanted(o)
+# end
+# 
+# @show Jacobian_ai = jacobian_ai()
+# open("file_lagrangien_multiplayers.py", "w") do output_file
+#     for t in Jacobian_ai.terms
+#         println(output_file, print_code_einsum_testing(t, "E", SASQ.IndexTranslation(), ['A','I']))
+#     end
+# end
+# 
+# exit()
+# 
+# function jacobian_ai()
+# o = Density(ex_ketop(9,10), HF, 2)
+# o = simplify_heavy(o)
+# o = look_for_tensor_replacements_smart(o, S_AIsymmetry)
+# o = look_for_tensor_replacements_smart(o, make_exchange_transformer("t", "u"))
+# o = look_for_tensor_replacements_smart(o, make_exchange_transformer("g", "L"))
+# return filter_unwanted(o)
+# end
+# 
+# @show Jacobian_ai = jacobian_ai()
+# open("file_right_electronic_Positron_Density_AI_II.py", "w") do output_file
+#     for t in Jacobian_ai.terms
+#         println(output_file, print_code_einsum_testing(t, "E", SASQ.IndexTranslation(), ['A','I']))
+#     end
+# end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function jacobian_ai()
-o = Density(ex_ketop(9,10), HF, 2)
+o = Jacobian_com_2_left(c_one_t, ex_ketop(12,11,10,9)*ex_positron(4,1),  HF, 2)
 o = simplify_heavy(o)
 o = look_for_tensor_replacements_smart(o, S_AIsymmetry)
 o = look_for_tensor_replacements_smart(o, make_exchange_transformer("t", "u"))
@@ -399,34 +467,14 @@ return filter_unwanted(o)
 end
 
 @show Jacobian_ai = jacobian_ai()
-open("file_Density_positron_oo.py", "w") do output_file
+open("file_Jacobian_postrion_AI_aibj_all_T1.py", "w") do output_file
     for t in Jacobian_ai.terms
         println(output_file, print_code_einsum_testing(t, "E", SASQ.IndexTranslation(), ['A','I']))
     end
 end
-
-exit()
-
-function jacobian_ai()
-o = Jacobian_com_2_left(ex_ketop(9,10), HF, 2)
-o = simplify_heavy(o)
-o = look_for_tensor_replacements_smart(o, S_AIsymmetry)
-o = look_for_tensor_replacements_smart(o, make_exchange_transformer("t", "u"))
-o = look_for_tensor_replacements_smart(o, make_exchange_transformer("g", "L"))
-return filter_unwanted(o)
-end
-
-@show Jacobian_ai = jacobian_ai()
-open("file_Jacobian_postrion_ai_all_T1.py", "w") do output_file
-    for t in Jacobian_ai.terms
-        println(output_file, print_code_einsum_testing(t, "E", SASQ.IndexTranslation(), ['A','I']))
-    end
-end
-
-exit()
 
 function jacobian_AI_ai()
-o = Jacobian_com_2_left(ex_ketop(10,9)*ex_positron(4,1), HF, 2)
+o = Jacobian_com_2_left(S_one_t, ex_ketop(12,11,10,9)*ex_positron(4,1), HF, 2)
 o = simplify_heavy(o)
 o = look_for_tensor_replacements_smart(o, S_AIsymmetry)
 o = look_for_tensor_replacements_smart(o, make_exchange_transformer("t", "u"))
@@ -435,16 +483,14 @@ return filter_unwanted(o)
 end
 
 @show Jacobian_AI_ai = jacobian_AI_ai()
-open("file_Jacobian_postrion_AIai_all_T2.py", "w") do output_file
+open("file_Jacobian_postrion_AI_aibj_all_S1.py", "w") do output_file
 for t in Jacobian_AI_ai.terms
     println(output_file, print_code_einsum_testing(t, "E", SASQ.IndexTranslation(), ['A','I']))
 end
 end
 
-exit()
-
 function jacobian_AI()
-    o = Jacobian_com_2_left(ex_positron(4,1), HF, 2)
+    o = Jacobian_com_2_left(Gamma_t, ex_ketop(12,11,10,9)*ex_positron(4,1), HF, 2)
     o = simplify_heavy(o)
     o = look_for_tensor_replacements_smart(o, S_AIsymmetry)
     o = look_for_tensor_replacements_smart(o, make_exchange_transformer("t", "u"))
@@ -453,10 +499,26 @@ function jacobian_AI()
 end
 
 @show Jacobian_AI = jacobian_AI()
-    open("file_Jacobian_postrion__AI_all_Gamma.py", "w") do output_file
+    open("file_Jacobian_postrion_AI_aibj_all_Gamma.py", "w") do output_file
     for t in Jacobian_AI.terms
         println(output_file, print_code_einsum_testing(t, "E", SASQ.IndexTranslation(), ['I','A']))
     end
+end
+
+function jacobian_aibj()
+o = Jacobian_com_2_left(c_two_t, ex_ketop(12,11,10,9)*ex_positron(4,1), HF, 2)
+o = simplify_heavy(o)
+o = look_for_tensor_replacements_smart(o, S_AIsymmetry)
+o = look_for_tensor_replacements_smart(o, make_exchange_transformer("t", "u"))
+o = look_for_tensor_replacements_smart(o, make_exchange_transformer("g", "L"))
+return filter_unwanted(o) 
+end
+
+@show Jacobian_aibj = jacobian_aibj()
+open("file_Jacobian_postrion_aibj_all_T2.py", "w") do output_file
+for t in Jacobian_aibj.terms
+    println(output_file, print_code_einsum_testing(t, "E", SASQ.IndexTranslation(), ['A','I']))
+end
 end
 
 exit() 
@@ -487,27 +549,10 @@ return filter_unwanted(o)
 end
 
 @show Jacobian_AI_ai = jacobian_AI_ai()
-open("file_Jacobian_postrion_AIai_all_S2.py", "w") do output_file
+open("file_Jacobian_postrion_AI_aibj_all_S2.py", "w") do output_file
 for t in Jacobian_AI_ai.terms
     println(output_file, print_code_einsum_testing(t, "E", SASQ.IndexTranslation(), ['A','I']))
 end
 end
-
-function jacobian_aibj()
-o = Jacobian_com_2_left(ex_ketop(12,11,10,9), HF, 2)
-o = simplify_heavy(o)
-o = look_for_tensor_replacements_smart(o, S_AIsymmetry)
-o = look_for_tensor_replacements_smart(o, make_exchange_transformer("t", "u"))
-o = look_for_tensor_replacements_smart(o, make_exchange_transformer("g", "L"))
-return filter_unwanted(o) 
-end
-
-@show Jacobian_aibj = jacobian_aibj()
-open("file_Jacobian_postrion_aibj_all_S2.py", "w") do output_file
-for t in Jacobian_aibj.terms
-    println(output_file, print_code_einsum_testing(t, "E", SASQ.IndexTranslation(), ['A','I']))
-end
-end
-
 ##
 
